@@ -72,7 +72,12 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadCategories(): Promise<void> {
-      // Load categories from API
+      try {
+        const { data } = await api.get('/categories');
+        setCategories(data);
+      } catch (error) {
+        console.log(error) /* eslint-disable-line */
+      }
     }
 
     loadCategories();
