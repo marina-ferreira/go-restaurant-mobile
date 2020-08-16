@@ -54,14 +54,14 @@ const Dashboard: React.FC = () => {
   const { navigate } = useNavigation();
 
   async function handleNavigate(id: number): Promise<void> {
-    navigate('FoodDetails', { foodId: id });
+    navigate('FoodDetails', { id });
   }
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
       const params = {
         category: selectedCategory,
-        ...(searchValue && { name: searchValue }),
+        ...(searchValue && { name_like: searchValue }),
       };
 
       try {

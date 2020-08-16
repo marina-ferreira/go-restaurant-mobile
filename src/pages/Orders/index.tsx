@@ -18,7 +18,7 @@ import {
   FoodPricing,
 } from './styles';
 
-interface Food {
+interface IFood {
   id: number;
   name: string;
   description: string;
@@ -28,7 +28,7 @@ interface Food {
 }
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Food[]>([]);
+  const [orders, setOrders] = useState<IFood[]>([]);
 
   useEffect(() => {
     async function loadOrders(): Promise<void> {
@@ -50,7 +50,7 @@ const Orders: React.FC = () => {
       price,
       description,
       thumbnail_url,
-      formattedValue: formatValue(price),
+      formattedValue: Number(formatValue(price)),
     }));
   }, [orders]);
 

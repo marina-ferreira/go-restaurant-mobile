@@ -73,11 +73,29 @@ const FoodDetails: React.FC = () => {
 
   useEffect(() => {
     async function loadFood(): Promise<void> {
-      // Load a specific food with extras based on routeParams id
+      try {
+        console.log(routeParams);
+        const { data } = await api.get(`/foods/${routeParams.id}`);
+        setFood(data);
+      } catch (error) {
+        console.log(error) /* eslint-disable-line */
+      }
     }
 
     loadFood();
   }, [routeParams]);
+
+  const memoizedFood = useMemo(() => {
+    const { id, name, price, description, image_url } = food;
+
+    return {
+      id,
+      name,
+      description,
+      image_url,
+      formattedPrice: formatValue(price),
+    };
+  }, [food]);
 
   function handleIncrementExtra(id: number): void {
     // Increment extra quantity
@@ -136,16 +154,16 @@ const FoodDetails: React.FC = () => {
           <Food>
             <FoodImageContainer>
               <Image
-                style={{ width: 327, height: 183 }}
+                style={{ width: 360, height: 183 }}
                 source={{
-                  uri: food.image_url,
+                  uri: memoizedFood.image_url,
                 }}
               />
             </FoodImageContainer>
             <FoodContent>
-              <FoodTitle>{food.name}</FoodTitle>
-              <FoodDescription>{food.description}</FoodDescription>
-              <FoodPricing>{food.formattedPrice}</FoodPricing>
+              <FoodTitle>{memoizedFood.name}</FoodTitle>
+              <FoodDescription>{memoizedFood.description}</FoodDescription>
+              <FoodPricing>{memoizedFood.formattedPrice}</FoodPricing>
             </FoodContent>
           </Food>
         </FoodsContainer>
