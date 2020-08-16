@@ -74,9 +74,9 @@ const FoodDetails: React.FC = () => {
   useEffect(() => {
     async function loadFood(): Promise<void> {
       try {
-        console.log(routeParams);
         const { data } = await api.get(`/foods/${routeParams.id}`);
         setFood(data);
+        setExtras(data.extras);
       } catch (error) {
         console.log(error) /* eslint-disable-line */
       }
@@ -98,19 +98,31 @@ const FoodDetails: React.FC = () => {
   }, [food]);
 
   function handleIncrementExtra(id: number): void {
-    // Increment extra quantity
+    const updatedExtras = extras.map(extra => {
+      const quantity = extra.quantity ? extra.quantity + 1 : 1;
+      return extra.id === id ? { ...extra, quantity } : extra;
+    });
+
+    setExtras(updatedExtras);
   }
 
   function handleDecrementExtra(id: number): void {
-    // Decrement extra quantity
+    const updatedExtras = extras.map(extra => {
+      return extra.id === id && extra.quantity > 0
+        ? { ...extra, quantity: extra.quantity - 1 }
+        : extra;
+    });
+
+    setExtras(updatedExtras);
   }
 
   function handleIncrementFood(): void {
-    // Increment food quantity
+    setFoodQuantity(foodQuantity + 1);
   }
 
   function handleDecrementFood(): void {
-    // Decrement food quantity
+    const quantity = foodQuantity > 0 ? foodQuantity - 1 : 0;
+    setFoodQuantity(quantity);
   }
 
   const toggleFavorite = useCallback(() => {
@@ -132,7 +144,6 @@ const FoodDetails: React.FC = () => {
   );
 
   useLayoutEffect(() => {
-    // Add the favorite icon on the right of the header bar
     navigation.setOptions({
       headerRight: () => (
         <MaterialIcon
@@ -181,7 +192,7 @@ const FoodDetails: React.FC = () => {
                   testID={`decrement-extra-${extra.id}`}
                 />
                 <AdittionalItemText testID={`extra-quantity-${extra.id}`}>
-                  {extra.quantity}
+                  {extra.quantity || 0}
                 </AdittionalItemText>
                 <Icon
                   size={15}
