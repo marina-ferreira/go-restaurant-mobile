@@ -89,7 +89,8 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const menu = useMemo(() => {
-    return foods.map(({ name, description, thumbnail_url, price }) => ({
+    return foods.map(({ id, name, description, thumbnail_url, price }) => ({
+      id,
       name,
       description,
       thumbnail_url,
