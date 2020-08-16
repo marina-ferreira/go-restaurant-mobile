@@ -23,7 +23,7 @@ interface IFood {
   name: string;
   description: string;
   price: number;
-  formattedValue: number;
+  formattedValue: string;
   thumbnail_url: string;
 }
 
@@ -50,7 +50,7 @@ const Orders: React.FC = () => {
       price,
       description,
       thumbnail_url,
-      formattedValue: Number(formatValue(price)),
+      formattedValue: formatValue(price),
     }));
   }, [orders]);
 

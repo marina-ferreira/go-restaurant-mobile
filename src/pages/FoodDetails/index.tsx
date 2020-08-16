@@ -56,6 +56,8 @@ interface Food {
   description: string;
   price: number;
   image_url: string;
+  thumbnail_url?: string;
+  category?: string;
   formattedPrice: string;
   extras: Extra[];
 }
@@ -90,7 +92,7 @@ const FoodDetails: React.FC = () => {
     async function loadFavorites(): Promise<void> {
       try {
         const { data } = await api.get(`/favorites`);
-        const isFav = !!data.find(fav => fav.id === routeParams.id);
+        const isFav = !!data.find((fav: Params) => fav.id === routeParams.id);
 
         isFav && setIsFavorite(isFav);
       } catch (error) {
@@ -143,7 +145,7 @@ const FoodDetails: React.FC = () => {
 
   const toggleFavorite = useCallback(async () => {
     setIsFavorite(!isFavorite);
-  }, [isFavorite, food]);
+  }, [isFavorite]);
 
   const cartTotal = useMemo(() => {
     const extrasTotal = extras.reduce((total, extra) => {
@@ -152,11 +154,27 @@ const FoodDetails: React.FC = () => {
       return total;
     }, 0);
 
-    return formatValue(extrasTotal * foodQuantity + food.price * foodQuantity);
+    return extrasTotal * foodQuantity + food.price * foodQuantity;
   }, [extras, food, foodQuantity]);
 
   async function handleFinishOrder(): Promise<void> {
-    // Finish the order and save on the API
+    try {
+      const { id, name, description, category, thumbnail_url } = food;
+      const params = {
+        name,
+        description,
+        category,
+        thumbnail_url,
+        product_id: id,
+        price: cartTotal,
+        extras,
+      };
+
+      await api.post('/orders', params);
+      navigation.navigate('Home');
+    } catch (error) {
+      console.log(error); /* eslint-disable-line */
+    }
   }
 
   const favoriteIconName = useMemo(
@@ -229,7 +247,9 @@ const FoodDetails: React.FC = () => {
         <TotalContainer>
           <Title>Total do pedido</Title>
           <PriceButtonContainer>
-            <TotalPrice testID="cart-total">{cartTotal}</TotalPrice>
+            <TotalPrice testID="cart-total">
+              {formatValue(cartTotal)}
+            </TotalPrice>
             <QuantityContainer>
               <Icon
                 size={15}
