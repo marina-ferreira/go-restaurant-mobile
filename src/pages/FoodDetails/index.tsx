@@ -144,8 +144,14 @@ const FoodDetails: React.FC = () => {
   }
 
   const toggleFavorite = useCallback(async () => {
+    if (isFavorite) {
+      await api.delete(`/favorites/${food.id}`);
+    } else {
+      await api.post(`/favorites`, food);
+    }
+
     setIsFavorite(!isFavorite);
-  }, [isFavorite]);
+  }, [isFavorite, food]);
 
   const cartTotal = useMemo(() => {
     const extrasTotal = extras.reduce((total, extra) => {
