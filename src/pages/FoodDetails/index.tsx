@@ -13,6 +13,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import formatValue from '../../utils/formatValue';
 
 import api from '../../services/api';
+import OrderSuccess from '../../components/OrderSuccess';
 
 import {
   Container,
@@ -67,6 +68,7 @@ const FoodDetails: React.FC = () => {
   const [extras, setExtras] = useState<Extra[]>([]);
   const [isFavorite, setIsFavorite] = useState(false);
   const [foodQuantity, setFoodQuantity] = useState(1);
+  const [isSuccessOrder, setIsSuccessOrder] = useState(false);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -177,7 +179,12 @@ const FoodDetails: React.FC = () => {
       };
 
       await api.post('/orders', params);
-      navigation.navigate('Home');
+      setIsSuccessOrder(true);
+
+      setTimeout(() => {
+        setIsSuccessOrder(false);
+        navigation.navigate('Home');
+      }, 2000);
     } catch (error) {
       console.log(error); /* eslint-disable-line */
     }
@@ -285,6 +292,8 @@ const FoodDetails: React.FC = () => {
           </FinishOrderButton>
         </TotalContainer>
       </ScrollContainer>
+
+      {isSuccessOrder && <OrderSuccess />}
     </Container>
   );
 };

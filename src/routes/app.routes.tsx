@@ -8,6 +8,7 @@ import TabRoutes from './tab.routes';
 
 import Home from '../pages/Home';
 import FoodDetails from '../pages/FoodDetails';
+import OrderSuccess from '../pages/OrderSuccess';
 
 const App = createStackNavigator();
 
