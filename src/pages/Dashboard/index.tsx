@@ -59,7 +59,12 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
-      // Load Foods from API
+      try {
+        const { data } = await api.get('/foods');
+        setFoods(data);
+      } catch (error) {
+        console.log(error) /* eslint-disable-line */
+      }
     }
 
     loadFoods();
