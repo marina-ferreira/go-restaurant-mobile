@@ -75,6 +75,7 @@ const FoodDetails: React.FC = () => {
     async function loadFood(): Promise<void> {
       try {
         const { data } = await api.get(`/foods/${routeParams.id}`);
+
         setFood(data);
         setExtras(data.extras);
       } catch (error) {
@@ -83,6 +84,21 @@ const FoodDetails: React.FC = () => {
     }
 
     loadFood();
+  }, [routeParams]);
+
+  useEffect(() => {
+    async function loadFavorites(): Promise<void> {
+      try {
+        const { data } = await api.get(`/favorites`);
+        const isFav = !!data.find(fav => fav.id === routeParams.id);
+
+        isFav && setIsFavorite(isFav);
+      } catch (error) {
+        console.log(error) /* eslint-disable-line */
+      }
+    }
+
+    loadFavorites();
   }, [routeParams]);
 
   const memoizedFood = useMemo(() => {
@@ -125,8 +141,8 @@ const FoodDetails: React.FC = () => {
     setFoodQuantity(quantity);
   }
 
-  const toggleFavorite = useCallback(() => {
-    // Toggle if food is favorite or not
+  const toggleFavorite = useCallback(async () => {
+    setIsFavorite(!isFavorite);
   }, [isFavorite, food]);
 
   const cartTotal = useMemo(() => {
@@ -143,7 +159,6 @@ const FoodDetails: React.FC = () => {
     // Finish the order and save on the API
   }
 
-  // Calculate the correct icon name
   const favoriteIconName = useMemo(
     () => (isFavorite ? 'favorite' : 'favorite-border'),
     [isFavorite],
