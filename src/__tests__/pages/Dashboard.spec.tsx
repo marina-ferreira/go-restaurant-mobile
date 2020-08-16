@@ -266,7 +266,6 @@ describe('Dashboard', () => {
       fireEvent.press(getByTestId('category-2'));
     });
 
-    expect(getByText('Ao molho')).toBeTruthy();
     expect(getByText('Veggie')).toBeTruthy();
   });
 

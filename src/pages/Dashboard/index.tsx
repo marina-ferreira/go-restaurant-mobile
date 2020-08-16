@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     async function loadFoods(): Promise<void> {
       const params = {
-        category: selectedCategory,
+        ...(selectedCategory && { category_like: selectedCategory }),
         ...(searchValue && { name_like: searchValue }),
       };
 
