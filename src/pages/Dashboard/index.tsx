@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Image, ScrollView } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -51,10 +51,10 @@ const Dashboard: React.FC = () => {
   >();
   const [searchValue, setSearchValue] = useState('');
 
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
 
   async function handleNavigate(id: number): Promise<void> {
-    // Navigate do ProductDetails page
+    navigate('FoodDetails', { foodId: id });
   }
 
   useEffect(() => {
@@ -88,6 +88,15 @@ const Dashboard: React.FC = () => {
     loadCategories();
   }, []);
 
+  const menu = useMemo(() => {
+    return foods.map(({ name, description, thumbnail_url, price }) => ({
+      name,
+      description,
+      thumbnail_url,
+      formattedPrice: formatValue(price),
+    }));
+  }, [foods]);
+
   function handleSelectCategory(id: number): void {
     setSelectedCategory(id);
   }
@@ -100,7 +109,7 @@ const Dashboard: React.FC = () => {
           name="log-out"
           size={24}
           color="#FFB84D"
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigate('Home')}
         />
       </Header>
       <FilterContainer>
@@ -140,7 +149,7 @@ const Dashboard: React.FC = () => {
         <FoodsContainer>
           <Title>Pratos</Title>
           <FoodList>
-            {foods.map(food => (
+            {menu.map(food => (
               <Food
                 key={food.id}
                 onPress={() => handleNavigate(food.id)}
