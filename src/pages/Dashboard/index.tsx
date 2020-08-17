@@ -99,7 +99,8 @@ const Dashboard: React.FC = () => {
   }, [foods]);
 
   function handleSelectCategory(id: number): void {
-    setSelectedCategory(id);
+    const value = selectedCategory === id ? undefined : id;
+    setSelectedCategory(value);
   }
 
   return (
