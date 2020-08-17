@@ -54,3 +54,4 @@ React Native mobile application developed during the GobStack Bootcamp. It allow
 ## :link: Links
 
 - [GoRestaurant - ReactJS](https://github.com/marina-ferreira/go-restaurant)
+- [Challenge](https://github.com/rocketseat-education/bootcamp-gostack-desafios/tree/master/desafio-react-native-delivery)
